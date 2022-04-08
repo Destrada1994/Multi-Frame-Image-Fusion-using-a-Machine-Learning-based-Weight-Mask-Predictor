@@ -1,0 +1,29 @@
+python Python_scripts/main.py --cuda --mse_avg --test --save_iter=50 --nEpochs=100 --batchSize=10 --trainsize=4000 --testsize=100 --loss=1 --loss_2=0 --loss_2_weight=1 --loss_dis=3 --adv_loss_weight=0.001
+python Python_scripts/main.py --cuda --mse_avg --test --save_iter=50 --nEpochs=100 --batchSize=10 --trainsize=4000 --testsize=100 --loss=2 --loss_2=0 --loss_2_weight=1 --loss_dis=3 --adv_loss_weight=0.001
+python Python_scripts/main.py --cuda --mse_avg --test --save_iter=50 --nEpochs=100 --batchSize=10 --trainsize=4000 --testsize=100 --loss=4 --loss_2=0 --loss_2_weight=1 --loss_dis=3 --adv_loss_weight=0.001
+python Python_scripts/main.py --cuda --mse_avg --test --save_iter=50 --nEpochs=100 --batchSize=10 --trainsize=4000 --testsize=100 --loss=8 --loss_2=0 --loss_2_weight=1 --loss_dis=3 --adv_loss_weight=0.001
+python Python_scripts/main.py --cuda --mse_avg --test --save_iter=50 --nEpochs=100 --batchSize=10 --trainsize=4000 --testsize=100 --loss=8 --loss_2=1 --loss_2_weight=1 --loss_dis=3 --adv_loss_weight 0.001
+
+python Python_scripts/main.py --cuda --mse_avg --test --save_iter=50 --nEpochs=200 --batchSize=10 --trainsize=10000 --testsize=100 --loss=8 --loss_2=4 --loss_2_weight=1 --loss_dis=3 --adv_loss_weight 0.001
+
+
+python Python_scripts/test_eval.py --cuda --valid_dir=images/full --valid_size=100 --model_path=model/Weight_Generator_L1Image_Discrminator_GANLS/epoch_100.pth --output_dir=results_full_L1
+python Python_scripts/test_eval.py --cuda --valid_dir=images/full --valid_size=100 --model_path=model/Weight_Generator_MSEImage_Discrminator_GANLS/epoch_100.pth --output_dir=results_full_MSE
+python Python_scripts/test_eval.py --cuda --valid_dir=images/full --valid_size=100 --model_path=model/Weight_Generator_correntropy_050Image_Discrminator_GANLS/epoch_100.pth --output_dir=results_full_correntropy_050
+
+
+
+python Python_scripts/test_eval_4.py --global_align --local_align --align_avg --cuda --valid_dir=images/full_Low_2 --valid_size=100 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_100.pth --output_dir=results_Low_FFT_correntropty_aligned_avg_256 --input_height=256 --input_width=256
+python Python_scripts/test_eval_4.py --global_align --local_align --align_avg --cuda --valid_dir=images/full_Strong_2 --valid_size=100 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_100.pth --output_dir=results_strong_FFT_correntropty_aligned_avg_256 --input_height=256 --input_width=256
+python Python_scripts/test_eval_4.py --global_align --local_align --align_avg --cuda --valid_dir=images/full_Extreme_2 --valid_size=100 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_100.pth --output_dir=results_extreme_FFT_correntropty_aligned_avg_256 --input_height=256 --input_width=256
+
+python Python_scripts/test_real.py --global_align --local_align --align_avg --cuda --valid_dir=USAF_underwater --valid_size=100 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_100.pth --output_dir=results_USAF_underwater_FFT_correntropty_aligned_avg_256 --input_height=256 --input_width=256
+
+
+python Python_scripts/test_eval_4.py --global_align --local_align --align_avg --cuda --valid_dir=images/full_Low_2 --valid_size=100 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_100.pth --output_dir=results_Low_FFT_correntropty_aligned_avg_128 --input_height=128 --input_width=128
+python Python_scripts/test_eval_4.py --global_align --local_align --align_avg --cuda --valid_dir=images/full_Strong_2 --valid_size=100 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_100.pth --output_dir=results_strong_FFT_correntropty_aligned_avg_128 --input_height=128 --input_width=128
+python Python_scripts/test_eval_4.py --global_align --local_align --align_avg --cuda --valid_dir=images/full_Extreme_2 --valid_size=100 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_100.pth --output_dir=results_extreme_FFT_correntropty_aligned_avg_128 --input_height=128 --input_width=128
+
+
+python Python_scripts/test_real.py --global_align --local_align --align_avg --cuda --valid_dir=underwater_turbulence\Scans --valid_size=3 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_200.pth --output_dir=results_USAF_underwater_FFT_correntropty_aligned_avg_256 --input_height=256 --input_width=256
+python Python_scripts/test_real.py --global_align --local_align --align_avg --cuda --valid_dir=underwater_turbulence\Scans --valid_size=3 --model_path=model/Weight_Generator_FFT_correntropy_050Image_Discrminator_WGANGP/epoch_200.pth --output_dir=results_USAF_underwater_FFT_correntropty_aligned_avg_128 --input_height=128 --input_width=128

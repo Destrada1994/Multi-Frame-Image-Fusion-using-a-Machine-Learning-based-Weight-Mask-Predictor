@@ -1,0 +1,110 @@
+clc; clear;
+rng default
+
+valid_filedir='C:\Users\destrada2013\Documents\Python Scripts\UMSLI_part1\images\Valid_HR';
+DIR_valid=dir(fullfile(valid_filedir,'*.png'));
+
+savedir='E:\Dissertation_MFSR_ML\Code\Multi-Image Super Resolution\ML_weight_predict\images_DS';
+input_valid_full_folder=[savedir,'\test_full\A'];
+target_valid_full_folder=[savedir,'\test_full\B'];
+input_valid_single_folder=[savedir,'\test_full\Single_A'];
+target_valid_single_folder=[savedir,'\test_full\Single_B'];
+mkdir(savedir)
+mkdir(input_valid_full_folder)
+mkdir(target_valid_full_folder)
+mkdir(input_valid_single_folder)
+mkdir(target_valid_single_folder)
+
+n_files_valid=100;
+
+N_per_image_valid=1;
+N_per_scan=9;
+
+BLUR=0;
+DS=1;
+NOISE=0;
+
+scale=4;
+pix_var=2;
+crop_size_full=512;
+scaleUp=1;
+
+fsize=floor(scale/2)*2+1;
+sigma=sqrt(fsize);
+filter=fspecial('gaussian',fsize,sigma);
+noise_var=0.001;
+
+figure(1)
+imagesc(filter)
+colormap(jet) 
+colorbar
+title('Gaussian Blur Kernel')
+
+c=0;
+index=randperm(n_files_valid*N_per_image_valid);
+for i=1:n_files_valid
+    fid=DIR_valid(i).name;
+    img=double(imread(fullfile(valid_filedir,fid)))/255;
+    if scaleUp ~= 1
+        img=imresize(img,scaleUp);
+    end
+    H=size(img,1);
+    W=size(img,2);
+    crop_size_full_W=W-(N_per_scan*pix_var);
+    crop_size_full_H=H-(N_per_scan*pix_var);
+    crop_size_full_W=crop_size_full_W-mod(crop_size_full_W,scale);
+    crop_size_full_H=crop_size_full_H-mod(crop_size_full_H,scale);
+    Y=round(rand(1)*(H-crop_size_full_W-1))-1;
+    X=round(rand(1)*(W-crop_size_full_H-1))-1;
+    c=c+1;
+    scan_target_folder=[target_valid_full_folder,'/scan_',num2str(index(c),'%05i')];
+    scan_input_folder=[input_valid_full_folder,'/scan_',num2str(index(c),'%05i')];
+    mkdir(scan_target_folder)
+    mkdir(scan_input_folder)
+    for k=1:N_per_scan
+        
+        Y=ceil(Y+(rand(1)-0.5)*2*pix_var);
+        X=ceil(X+(rand(1)-0.5)*2*pix_var);
+        if X < 1
+            X=1;
+        elseif X > (W-crop_size_full_W)
+            X=(W-crop_size_full_W);
+        end
+        if Y < 1
+            Y=1;
+        elseif Y > (H-crop_size_full_H)
+            Y=(H-crop_size_full_H);
+        end
+        cropped=imcrop(img,[X Y (crop_size_full_W)-1 (crop_size_full_H)-1]);
+        cc=0;
+        
+        degraded=cropped;
+        if BLUR==1
+            degraded=imfilter(degraded,filter);
+        end
+        if DS == 1
+            degraded=degraded(1:scale:end,1:scale:end,:);
+        end
+        if NOISE == 1
+            degraded=imnoise(degraded,'gaussian',0,noise_var);
+        end
+    
+        if size(cropped,1)~=crop_size_full_H
+            error('cropped 1')
+        elseif size(cropped,2)~=crop_size_full_W
+            error('cropped 2')
+        end
+        if size(degraded,1)~=round(crop_size_full_H/scale)
+            error('cropped 1')
+        elseif size(degraded,2)~=round(crop_size_full_W/scale)
+            error('degraded 2')
+        end
+        
+        if k == 1
+            imwrite(cropped,fullfile(target_valid_single_folder,['scan_',num2str(index(c),'%05i'),'.png']))
+            imwrite(degraded,fullfile(input_valid_single_folder,['scan_',num2str(index(c),'%05i'),'.png']))
+        end
+        imwrite(cropped,fullfile(scan_target_folder,['scan_',num2str(index(c),'%05i'),'_image_',num2str(k,'%05i'),'.png']))
+        imwrite(degraded,fullfile(scan_input_folder,['scan_',num2str(index(c),'%05i'),'_image_',num2str(k,'%05i'),'.png']))
+    end
+end
